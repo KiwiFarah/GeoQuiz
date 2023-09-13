@@ -11,13 +11,20 @@ public class MainActivity extends AppCompatActivity {
     private Button mTrueButton;
     private Button mFalseButton;
     private TextView mQuestionTextView;
+    private Question[] mQuestions = new Question[]{
+            new Question(R.string.question_oceans,true),
+            new Question(R.string.question_mideast,true),
+            new Question(R.string.question_asia,true),
+    };
 
+    private int mCurrentIndex = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-        mQuestionTextView.setText(R.string.question_text);
+        int question = mQuestions[mCurrentIndex].getTextResId();
+        mQuestionTextView.setText(question);
         mTrueButton = (Button) findViewById(R.id.true_button);
         mFalseButton = (Button) findViewById(R.id.false_button);
         mTrueButton.setOnClickListener(new View.OnClickListener() {
