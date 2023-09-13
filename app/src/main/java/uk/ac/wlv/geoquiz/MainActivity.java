@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex = 0;
+    private Button mNextButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
 
+            }
+        });
+        mNextButton = (Button) findViewById((R.id.next_button));
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestions.length;
+                int question = mQuestions[mCurrentIndex].getTextResId();
+                mQuestionTextView.setText(question);
             }
         });
     }
