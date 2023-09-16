@@ -10,12 +10,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ImageButton;
 import android.util.Log;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
     private static final String KEY_INDEX = "index";
     private static final String TAG = "MainActivity";
     private Button mTrueButton;
     private Button mFalseButton;
+    private Button mCheatButton;
     private TextView mQuestionTextView;
     private Question[] mQuestions = new Question[]{
             new Question(R.string.question_oceans,true),
@@ -69,6 +71,14 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null){
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
         }
+        mCheatButton = (Button)findViewById(R.id.cheat_button);
+        mCheatButton.setOnClickListener(new View.OnClickListener(){
+          @Override
+          public void onClick(View v){
+              Intent i = new Intent (MainActivity.this, CheatActivity.class);
+              startActivity(i);
+          }
+        });
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         updateQuestion();
         mTrueButton = (Button) findViewById(R.id.true_button);
