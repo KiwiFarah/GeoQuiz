@@ -12,4 +12,9 @@
     <string name="question_africa">The source of the Nile River is in Egypt.</string>
     <string name="question_americas">The Amazon River is the longest river in the Americas.</string>
     <string name="question_asia">Lake Baikal is the world\'s oldest and deepest freshwater lake.</string>
+    <string name="question_europe">The Eiffel Tower is located in Berlin.</string>
+    <string name="question_australia">Australia is the world\'s smallest continent.</string>
+    <string name="question_mountains">Mount Everest is located in the Andes mountain range.</string>
+    <string name="question_antarctica">Antarctica is the driest continent on Earth.</string>
+    <string name="question_desert">The Sahara Desert is located in Australia.</string>
 </resources>

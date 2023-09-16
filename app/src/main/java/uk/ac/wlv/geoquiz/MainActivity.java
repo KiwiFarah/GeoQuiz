@@ -18,27 +18,45 @@ public class MainActivity extends AppCompatActivity {
             new Question(R.string.question_oceans,true),
             new Question(R.string.question_mideast,true),
             new Question(R.string.question_asia,true),
+            new Question(R.string.question_europe,false),
+            new Question(R.string.question_australia,true),
+            new Question(R.string.question_mountains,false),
+            new Question(R.string.question_antarctica,true),
+            new Question(R.string.question_desert,false)
     };
 
     private int mCurrentIndex = 0;
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
+    private int mCorrectlyAnswered = 0;
+    private TextView mSuccessRateTextView;
 
+    private void updateSuccessRate() {
+        int totalQuestionsAnswered = mCurrentIndex + 1;
+        double successRate = ((double) mCorrectlyAnswered / totalQuestionsAnswered) * 100;
+
+        successRate = Math.min(successRate, 100.0);
+
+        mSuccessRateTextView.setText(String.format("Success Rate is: %.2f%%", successRate));
+    }
 
     private void updateQuestion(){
         int question = mQuestions[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
     }
 
-    private void checkAnswer (boolean userPressedTrue){
+    private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestions[mCurrentIndex].isAnswerTrue();
         int messageResId = 0;
-        if (userPressedTrue == answerIsTrue){
+        if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;
-        }else{
+            mCorrectlyAnswered++;
+        } else {
             messageResId = R.string.incorrect_toast;
         }
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
+
+        updateSuccessRate();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+        mSuccessRateTextView = (TextView) findViewById(R.id.success_rate_text_view);
+
 
             }
         });
