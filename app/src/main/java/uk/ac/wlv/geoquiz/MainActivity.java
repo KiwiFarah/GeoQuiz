@@ -102,12 +102,12 @@ public class MainActivity extends AppCompatActivity {
         }
         mCheatButton = (Button)findViewById(R.id.cheat_button);
         mCheatButton.setOnClickListener(new View.OnClickListener(){
-          @Override
-          public void onClick(View v){
-              boolean answerIsTrue = mQuestions[mCurrentIndex].isAnswerTrue();
-              Intent i = CheatActivity.newIntent(MainActivity.this, answerIsTrue);
-              startActivityForResult(i, REQUEST_CODE_CHEAT);
-          }
+            @Override
+            public void onClick(View v){
+                boolean answerIsTrue = mQuestions[mCurrentIndex].isAnswerTrue();
+                Intent i = CheatActivity.newIntent(MainActivity.this, answerIsTrue);
+                startActivityForResult(i, REQUEST_CODE_CHEAT);
+            }
         });
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         updateQuestion();
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               checkAnswer(false);
+                checkAnswer(false);
             }
         });
         mNextButton = (ImageButton) findViewById(R.id.next_button);
