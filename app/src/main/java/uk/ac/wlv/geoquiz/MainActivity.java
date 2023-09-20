@@ -11,10 +11,12 @@ import android.widget.Toast;
 import android.widget.ImageButton;
 import android.util.Log;
 import android.content.Intent;
+import android.app.Activity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String KEY_INDEX = "index";
     private static final String TAG = "MainActivity";
+    private static final int REQUEST_CODE_CHEAT = 0;
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mCheatButton;
@@ -33,6 +35,25 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentIndex = 0;
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
+
+    private boolean mIsCheater;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if(requestCode == REQUEST_CODE_CHEAT){
+            if (data == null){
+                return;
+            }
+            mIsCheater = CheatActivity.wasAnswerShown(data);
+        }
+
+
+    }
+
     private int mCorrectlyAnswered = 0;
     private TextView mSuccessRateTextView;
 
@@ -53,12 +74,20 @@ public class MainActivity extends AppCompatActivity {
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestions[mCurrentIndex].isAnswerTrue();
         int messageResId = 0;
-        if (userPressedTrue == answerIsTrue) {
-            messageResId = R.string.correct_toast;
-            mCorrectlyAnswered++;
-        } else {
-            messageResId = R.string.incorrect_toast;
+
+        if (mIsCheater ){
+
+            messageResId = R.string.judgement_toast;
         }
+        else{
+            if (userPressedTrue == answerIsTrue) {
+                messageResId = R.string.correct_toast;
+                mCorrectlyAnswered++;
+            } else {
+                messageResId = R.string.incorrect_toast;
+            }
+        }
+
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
 
         updateSuccessRate();
@@ -75,8 +104,9 @@ public class MainActivity extends AppCompatActivity {
         mCheatButton.setOnClickListener(new View.OnClickListener(){
           @Override
           public void onClick(View v){
-              Intent i = new Intent (MainActivity.this, CheatActivity.class);
-              startActivity(i);
+              boolean answerIsTrue = mQuestions[mCurrentIndex].isAnswerTrue();
+              Intent i = CheatActivity.newIntent(MainActivity.this, answerIsTrue);
+              startActivityForResult(i, REQUEST_CODE_CHEAT);
           }
         });
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
@@ -100,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestions.length;
+                mIsCheater = false;
                 updateQuestion();
             }
         });
