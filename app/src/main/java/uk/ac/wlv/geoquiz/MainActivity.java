@@ -14,9 +14,11 @@ import android.content.Intent;
 import android.app.Activity;
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String KEY_INDEX = "index";
     private static final String TAG = "MainActivity";
     private static final int REQUEST_CODE_CHEAT = 0;
+    private static final String KEY_IS_CHEATER = "user_activity_is_cheater";
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mCheatButton;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             new Question(R.string.question_antarctica,true),
             new Question(R.string.question_desert,false)
     };
-
+    private boolean[] mIsCheaterArray = new boolean[mQuestions.length];
     private int mCurrentIndex = 0;
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
@@ -44,15 +46,16 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        if(requestCode == REQUEST_CODE_CHEAT){
-            if (data == null){
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            if (data == null) {
                 return;
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
+            mIsCheaterArray[mCurrentIndex] = mIsCheater;
         }
-
-
     }
+
+
 
     private int mCorrectlyAnswered = 0;
     private TextView mSuccessRateTextView;
@@ -66,9 +69,10 @@ public class MainActivity extends AppCompatActivity {
         mSuccessRateTextView.setText(String.format("Success Rate is: %.2f%%", successRate));
     }
 
-    private void updateQuestion(){
+    private void updateQuestion() {
         int question = mQuestions[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+        mIsCheater = mIsCheaterArray[mCurrentIndex];
     }
 
     private void checkAnswer(boolean userPressedTrue) {
@@ -97,10 +101,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_main);
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            boolean[] savedCheaterArray = savedInstanceState.getBooleanArray(KEY_IS_CHEATER);
+            if (savedCheaterArray != null) {
+                mIsCheaterArray = savedCheaterArray;
+            }
+            mIsCheater = mIsCheaterArray[mCurrentIndex];
         }
-        mCheatButton = (Button)findViewById(R.id.cheat_button);
+       mCheatButton = (Button)findViewById(R.id.cheat_button);
         mCheatButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -176,11 +185,13 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         Log.d(TAG, "onDestroy() called");
     }
+
+
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
+    public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        savedInstanceState.putBooleanArray(KEY_IS_CHEATER, mIsCheaterArray);
     }
 
 
